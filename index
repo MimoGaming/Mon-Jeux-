@@ -1,0 +1,98 @@
+<html>
+<!-- à ce stade, j'ai le curseur pour le personnage et il s'actualise-->
+  <head>
+  <style>
+#zombie_map {
+    height: 100%;
+    width: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;  
+    background-color: grey;
+}
+</style>
+    <title>RallyInfo d'Asbestos</title>
+  </head>
+  <body>
+RallyInfo d'Asbestos
+<div id="zombie_map">
+<script>
+    var zombie_map;
+	var old_position;
+	var all_markers = [];
+	var data = `45.77309274686413 -71.92931145429611 Aréna.png 
+
+45.77300107536654 -71.92954480648041 Bar.png 
+
+45.773315377016644 -71.92945092916489 Asb.png 
+
+45.77313577629061 -71.92898154258728 Asb.png 
+
+45.77323306008901 -71.92980229854584 Asb.png
+
+45.77341640217088 -71.92989617586136 Asb.png
+
+45.77340704799761 -71.93023413419724 Asb.png  
+
+45.77342949801079 -71.93002492189407 Asb.png 
+
+45.77372883065637 -71.93036824464798 Asb.png`;
+var markers = data.split("\n");
+    function initMap() {
+            zombie_map = new google.maps.Map(document.getElementById('zombie_map'), {
+            zoom: 19,
+            center: {lat: 45.773345, lng: -71.929264}
+        });
+		<!--code pour indiquer les icones sur la carte avec les coordonnees-->
+		for(var i=0; i < markers.length; i++){
+		document.write(markers[i] + "<br>");
+		var marker_data = markers[i].trim();
+		marker_data = marker_data.split(" ");
+		var latitude = marker_data[0];
+		var longitude = marker_data[1];
+		var emoji = marker_data[2];
+		var marker_position = new google.maps.LatLng(latitude, longitude);
+		var marker = new google.maps.Marker({
+		position: marker_position,
+		map: zombie_map,
+		icon: emoji
+		});
+		all_markers.push(marker);
+		}
+		
+		<!--geolocalisation-->
+		if(navigator.geolocation) {
+    navigator.geolocation.watchPosition(set_my_position);
+}
+else {
+    alert("La géolocalisation ne fonctionne pas dans votre navigateur");
+}
+		old_position = new google.maps.Marker({
+		position: {lat: 45.773345, lng: -71.929264},
+		map: zombie_map,
+		icon: "test.png"
+		});
+    }
+	function set_my_position(position){
+		old_position.setMap(null);
+		var emoji = "player.png";
+		var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+		var marker = new google.maps.Marker({
+		position: pos,
+		map: zombie_map,
+		icon: emoji
+		});
+		old_position = marker;
+		}		
+</script>
+
+
+</div>
+  
+  
+  	  <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD_9xibS0H8YXXxFm0cZfZv9hPQhWzjIv8&callback=initMap">
+  </script>
+  
+  </body>
+</html>
